@@ -1,13 +1,18 @@
+//3rd party modules
 import express, { Express, Request, Response } from 'express';
+import dotenv from 'dotenv';
+
+//Handlers
 import { handleSearchArticles } from './src/handleSearchArticles';
 import { handleSummarizeArticles } from './src/handleSummarizeArticles';
-import dotenv from 'dotenv';
 
 dotenv.config();
 
+//App initialization
 const app: Express = express();
 const port = process.env.PORT || 3101;
 
+//Routes
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Wiki Search and Summarize');
 });
@@ -22,7 +27,7 @@ app.get('/summarize-articles', async (req: Request, res: Response) => {
   await handleSummarizeArticles(req,res);
 })
 
-
+//App listen
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
