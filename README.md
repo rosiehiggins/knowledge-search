@@ -10,7 +10,7 @@ The LLM model used is dynamically  set based on the size of the article text.
 
 ## Set up
 
-create a .env file and include an API key for OpenAI under OPEN_AI_KEY 
+    create a .env file and include an API key for OpenAI under OPEN_AI_KEY 
 
 ## Install
 
