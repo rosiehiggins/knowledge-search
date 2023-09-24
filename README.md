@@ -1,16 +1,16 @@
 # Wikipedia search and summarize REST API application
 
-    This is an example microservice providing a REST API with two endpoints: search articles and summarize articles.
-    search-articles allows you to search for a number of wikipedia articles using the Wikipedia public API given a 
-    search query and a limit. summarize-articles provides a summary of the top articles returned from a search query 
-    (you can summarize up to three articles). It implements a 2 stage RAG (retrieval augmented generation) system, 
-    which first queries Wikipedia, grabs the Wikipedia html for each article and parses out the text. Then the 
-    article text is injected into a prompt and if necessary text is culled so that it can fit into the model context window. 
-    The LLM model used is dynamically  set based on the size of the article text.
+This is an example microservice providing a REST API with two endpoints: search articles and summarize articles.
+search-articles allows you to search for a number of wikipedia articles using the Wikipedia public API given a 
+search query and a limit. summarize-articles provides a summary of the top articles returned from a search query 
+(you can summarize up to three articles). It implements a 2 stage RAG (retrieval augmented generation) system, 
+which first queries Wikipedia, grabs the Wikipedia html for each article and parses out the text. Then the 
+article text is injected into a prompt and if necessary text is culled so that it can fit into the model context window. 
+The LLM model used is dynamically  set based on the size of the article text.
 
 ## Set up
 
-    create a .env file and include an API key for OpenAI under OPEN_AI_KEY 
+create a .env file and include an API key for OpenAI under OPEN_AI_KEY 
 
 ## Install
 
@@ -36,8 +36,8 @@ The REST API to the application is described below.
 
 ## Search Wikipedia articles
 
-    Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles, this returns a list of
-    articles matching your search query.
+Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles, this returns a list of
+articles matching your search query.
 
 ### Request
 
@@ -66,11 +66,11 @@ The REST API to the application is described below.
 
 ## Get a summary of wikipedia articles
 
-    Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles (limit), this returns a summary of 
-    all the articles inlcuded in the query. Up to a limit of 3 articles. It implements a 2 stage RAG 
-    (retrieval augmented generation) system, which first queries Wikipedia, grabs the Wikipedia html for each article 
-    and parses out the text. Then the article text is injected into a prompt and if necessary text is culled so that 
-    it can fit into the model context window. The LLM model used is dynamically  set based on the size of the article text.
+Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles (limit), this returns a summary of 
+all the articles inlcuded in the query. Up to a limit of 3 articles. It implements a 2 stage RAG 
+(retrieval augmented generation) system, which first queries Wikipedia, grabs the Wikipedia html for each article 
+and parses out the text. Then the article text is injected into a prompt and if necessary text is culled so that 
+it can fit into the model context window. The LLM model used is dynamically  set based on the size of the article text.
 
 ### Request
 
