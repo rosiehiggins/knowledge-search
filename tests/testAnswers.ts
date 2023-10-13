@@ -5,6 +5,7 @@ export const testAnswers = async () => {
 
     let result = false;
 
+    
     const response = await axios({
         method: 'post',
         url: `http://localhost:${process.env.PORT}/answers`,
@@ -12,8 +13,7 @@ export const testAnswers = async () => {
             'Content-Type': 'application/json'
         },
         data: {
-            q:6,
-            //question:'What is the capital of England?',
+            question:'What is the capital of England?',
             source:'wiki'
         }
     });

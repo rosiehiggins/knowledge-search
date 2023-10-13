@@ -1,5 +1,5 @@
 {
-  "name": "recite-me-test",
+  "name": "knowledge-search",
   "version": "1.0.0",
   "description": "NodeJs test for Recite Me",
   "main": "dist/index.js",
