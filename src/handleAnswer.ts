@@ -11,6 +11,8 @@ interface AnswerResponse  {
     answer: Answer;
 }
 
+const sources = ['wiki']
+
 export async function handleAnswer(req : Request, res: Response)  {
    
     console.log('answers');
@@ -31,6 +33,15 @@ export async function handleAnswer(req : Request, res: Response)  {
     if(!question.source) {
         question.source = "wiki";
     }
+
+    //If source is not recognised return bad request
+    else if(!sources.includes(question.source)){
+        answerResponse.message = "Requested source does not exist, select an available source";
+        res.status(400).send(answerResponse);
+        return;
+    }
+
+    console.log('source',question.source);
 
     try {
         //Get key words from question

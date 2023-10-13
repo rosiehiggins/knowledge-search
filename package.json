@@ -1,7 +1,7 @@
 {
   "name": "knowledge-search",
   "version": "1.0.0",
-  "description": "NodeJs test for Recite Me",
+  "description": "an API to search knowledge",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig-build.json",

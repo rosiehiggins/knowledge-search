@@ -17,11 +17,6 @@ const app: Express = express();
 const port = process.env.PORT || 3101;
 
 //Middleware
-app.use((req,res,next)=>{
-  console.log(req.body);
-  next()
-})
-
 app.use(express.json());
 
 //Routes
