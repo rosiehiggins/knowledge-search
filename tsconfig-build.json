@@ -19,9 +19,8 @@
     /* Completeness */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  //"include": ["src/**/*.ts"],
-
-  "include": ["index.ts", "src/**/*", "tests/**/*"],
-
-  "exclude": ["node_modules"]
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "tests/**/*"
+  ]
 }

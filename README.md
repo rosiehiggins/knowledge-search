@@ -1,12 +1,5 @@
-# Wikipedia search and summarize REST API application
+# Knowledge search REST API application
 
-This is an example microservice providing a REST API with two endpoints: search articles and summarize articles.
-search-articles allows you to search for a number of wikipedia articles using the Wikipedia public API given a 
-search query and a limit. summarize-articles provides a summary of the top articles returned from a search query 
-(you can summarize up to three articles). It implements a 2 stage RAG (retrieval augmented generation) system, 
-which first queries Wikipedia, grabs the Wikipedia html for each article and parses out the text. Then the 
-article text is injected into a prompt and if necessary text is culled so that it can fit into the model context window. 
-The LLM model used is dynamically  set based on the size of the article text.
 
 ## Set up
 
@@ -16,23 +9,36 @@ The LLM model used is dynamically  set based on the size of the article text.
 
     npm install
 
+## Run app in development
+
+    npm run dev
+
+## Run the tests
+
+    npm run test [args]
+
 ## Build
 
     npm run build
 
-## Run the app
+## Start 
 
     npm start
-
-## Run the tests
-
-    //I ran out of time for creating tests but they would go here
-    //I would create a function to call all of the end-points and assert the results. 
-    //OpenAI content can be checked by setting the model temperature to 0.
 
 # REST API
 
 The REST API to the application is described below.
+
+## answers
+
+Given a question and a data source (wiki,...) e.g. "What is a deciduous tree?" or "What colour is the sky" this returns a answer in natural language and the sources used in the answer.
+
+### Request
+
+POST /answers/
+
+curl -X POST http://localhost:3101/answers -H 'Accept: application/json' -d "{"question":"question","source":"wiki"}"
+
 
 ## Search Wikipedia articles
 

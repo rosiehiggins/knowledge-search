@@ -1,14 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import dotenv from 'dotenv';
 import { encode  } from 'gpt-tokenizer'
 
 import { Article } from './Article';
 import { Summary } from './Summary';
 
 //Application service for OpenAI Content generation using their LLMs
-
-//config
-dotenv.config();
 const openAIKey = process.env.OPEN_AI_KEY;
 
 //GPT models used in this sytem

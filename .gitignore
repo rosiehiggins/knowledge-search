@@ -1,10 +1,10 @@
 
 # Dependency directories
 node_modules/
+dist/
 
 # dotenv environment variables file
 .env
-
 
 # mac stuff
 **/.DS_Store
