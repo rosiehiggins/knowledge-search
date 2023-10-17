@@ -19,7 +19,7 @@ export async function handleAnswer(req : Request, res: Response)  {
 
     const question : Question = {text:req.body.question,source:req.body.source};
        
-    let answer : Answer = {text:'',source:''};
+    let answer : Answer = {text:'', references:[]};
     let answerResponse : AnswerResponse = {success:false, message:'', answer:answer};
 
     //If no question text is provided then return bad request
@@ -44,14 +44,22 @@ export async function handleAnswer(req : Request, res: Response)  {
     console.log('source',question.source);
 
     try {
-        //Get key words from question
+        //Get keywords from question
 
         //Search Wikipedia for article(s)
-        //const articles = await searchWikipedia(search,limit,false);
+        const articles = await searchWikipedia(question.text,1,true);
+        
+        //response if no results
+        if(articles.length===0){
+            answerResponse.success = true;
+            answerResponse.message = "No results found";
+            res.status(204).send();
+            return;
+        }
 
         //Generate question answer
 
-        //TODO set return status based on whether there is data
+
         res.status(200).send(answerResponse);
         return;
     }
@@ -68,8 +76,9 @@ export async function handleAnswer(req : Request, res: Response)  {
         }
         answerResponse.message = message;
 
-        //TODO check status code here
-        res.status(400).send(answerResponse);
+        console.log(message);
+
+        res.status(500).send(answerResponse);
         return;
     }
 

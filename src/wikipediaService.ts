@@ -3,8 +3,17 @@ import { Article } from './Article';
 import cheerio from 'cheerio';
 
 //Application service for searching wikipedia 
-//Wikipedia is searched following their open search protocol : https://en.wikipedia.org/w/api.php?action=help&modules=opensearch
+//Wikipedia is searched following their search protocol : https://www.mediawiki.org/wiki/API:Search
 
+interface WikiSearchResult {
+    ns: number,
+    title: string,
+    pageid: number,
+    size: number,
+    wordcount :number,
+    snippet: string,
+    timestamp: string
+}
 
 //Returns an array of Articles, 
 //A search query is sent to Wikipedia
@@ -19,11 +28,20 @@ export async function searchWikipedia(search : string, limit: number, includeTex
 
     try {
         //Request data from wikipedia API
-        const res = await axios.get(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${search}&limit=${limit}&format=json`);
+        //const res = await axios.get(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${search}&limit=${limit}&format=json`);
+        const res  = await axios.get(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&srlimit=${limit}&format=json`);
+        //https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=banana&srlimit=10format=json
+
+        const searchResults = res.data.query.search;
+        if(searchResults.length === 0){
+            console.log('no results from search')
+            return [];
+        }
+
 
         //Parse response into Article data
-        const titles : string[] = res.data[1];
-        const urls : string[] = res.data[3];
+        const titles : string[] = searchResults.map((el : WikiSearchResult) => el.title);
+        const urls : string[] = searchResults.map((el : WikiSearchResult) => `http://en.wikipedia.org/?curid=${el.pageid}`);
         //This will be set if includeText = true
         let texts : string[] = [];
 

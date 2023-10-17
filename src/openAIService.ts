@@ -1,8 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 import { encode  } from 'gpt-tokenizer'
 
 import { Article } from './Article';
 import { Summary } from './Summary';
+import { Answer } from './Answer';
 
 //Application service for OpenAI Content generation using their LLMs
 const openAIKey = process.env.OPEN_AI_KEY;
@@ -16,6 +17,72 @@ interface ChatMessage {
     role: "user" | "assistant" | "system";
     content: string;
     token?: number;
+}
+
+//Request chat content from OpenAI with exponential backoff and retry implemented in case of rate limiting
+//Returns only generated text from request
+export async function requestChatContent(messages : ChatMessage[], model : string ,maxTokens : number,temperature : number, maxRetries : number = 10) : Promise<string>  {
+
+    let delay = 1;
+
+    for (let i = 0; i < maxRetries; i++){
+        try{
+            console.log('attempt ',i);
+            const response =
+                await axios({
+                    method: 'post',
+                    url: 'https://api.openai.com/v1/chat/completions',
+                    headers:{
+                        'Authorization': `Bearer ${openAIKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        model,
+                        messages,
+                        temperature,
+                        max_tokens:maxTokens,
+                    }
+                });
+            return response.data.choices[0].message.content.trim();
+        }
+
+        catch(error){
+            console.log('request chat content error');
+
+            if (isAxiosError(error) && error.response) {
+                //429 is too many requests error
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+            } else if (isAxiosError(error) && error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                //random adds jitter to the delay
+                delay *= 2 * (1 * Math.random())
+                await new Promise(resolve => setTimeout(resolve, delay));
+                console.log(error.request);
+    
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                const message = isAxiosError(error) ? error.message : error;
+                console.log('Error', message);
+                return '';
+            }
+        }
+    }
+
+    return '';
+}
+
+export async function answerQuestion(dataSource : Article[]) : Promise<Answer> {
+    let answer : Answer = {text:'', references: []};
+
+    return answer;
 }
 
 //Given a list of Articles this function will return a short summary of the articles using LLM (OpenAI)
@@ -83,42 +150,7 @@ export async function summarizeArticles(articles: Article[]) : Promise<Summary> 
 
     //Set model variable based on max token limit
     let model = maxMessageTokens === 15000 ? GPT_35_TURBO_16K : GPT_35_TURBO;
-    let summaryText : string = '';
-
-    //Request summary text from OpenAI
-    //TODO: Break this into separate function and implement back of and wait to cope with too many requests issue
-    try {
-        const response : AxiosResponse =
-            await axios({
-                    method: 'post',
-                    url: 'https://api.openai.com/v1/chat/completions',
-                    headers:{
-                        'Authorization': `Bearer ${openAIKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                    model,
-                    messages,
-                    temperature:0.3,
-                    frequency_penalty:1,
-                    max_tokens:1000,
-                }
-            })
-
-        summaryText = response.data.choices[0].message.content.trim();
-
-    }
-    catch(error){
-        
-        let message = '';
-        if(typeof error === 'string'){
-            message = error;
-        }
-        else if (error instanceof Error) {
-            message = error.message 
-        }
-        throw new Error(`An error occurred generating OpenAI content: ${message}`);
-    }
+    let summaryText : string = await requestChatContent(messages,model,1000,0.3);
 
     let summary : Summary = {summary:summaryText, urls:articles.map(el=>(el.url))};
 

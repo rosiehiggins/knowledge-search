@@ -1,19 +1,38 @@
 
 import { makePOSTRequest } from './util';
 
+
 export const testAnswers = async () => {
 
-    let result = false;
 
-    const response = await makePOSTRequest('answers', {question:'What is the capital of England?',source:'wiki'})
-
-    console.log(response.data);
-
-    if(response?.data?.success){
-        result = true;
+    try{
+        const responses = await Promise.all([
+            
+            makePOSTRequest('answers', {question:'What is the capital of England?',source:'wiki'})
+            .then((res)=> (res.data.success)),
+    
+            makePOSTRequest('answers', {question:'wejrkwnsvkjf',source:'wiki'})
+            .then((res)=> {console.log(res.data); return res.status === 204}),
+        ]) 
+    
+        console.log(responses)
+        const pass = responses.every(el => el);
+        return pass;
     }
 
-    return result;
+    catch(error){
+        let message = '';
+        if(typeof error === 'string'){
+            message = error;
+        }
+        else if (error instanceof Error) {
+            message = error.message 
+        }
+        console.log(message);
+        return false;
+    }
+
+    
 
 }
 

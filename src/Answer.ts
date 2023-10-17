@@ -1,5 +1,5 @@
 
 export interface Answer {
     text : string;
-    source: string
+    references: string[]
 }
