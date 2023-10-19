@@ -41,7 +41,7 @@ export async function handleSummarizeArticles(req : Request, res: Response)  {
         return;
     }
 
-    if(limit >= 4){
+    if(limit > 10){
         summaryResponse.message = "Limit is too large";
         res.status(400).send(summaryResponse);
         return;

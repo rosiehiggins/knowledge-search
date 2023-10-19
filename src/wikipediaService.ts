@@ -43,7 +43,7 @@ export async function searchWikipedia(search : string, limit: number, includeTex
         const titles : string[] = searchResults.map((el : WikiSearchResult) => el.title);
         const urls : string[] = searchResults.map((el : WikiSearchResult) => `http://en.wikipedia.org/?curid=${el.pageid}`);
         //This will be set if includeText = true
-        let texts : string[] = [];
+        let texts : string[][] = [];
 
         //Get article text
         //For each URL get html body and parse p elements using Cheerio
@@ -60,7 +60,8 @@ export async function searchWikipedia(search : string, limit: number, includeTex
                         const $ = cheerio.load(res.data);
                         //Query all p elements to grab article text
                         const $p = $('p').text();
-                        return $p;
+                        const trimmed = $p.split(/\n/g).filter(el => el)
+                        return trimmed;
                     })
                 )
             }
@@ -71,7 +72,7 @@ export async function searchWikipedia(search : string, limit: number, includeTex
 
         //Build Articles list
         articles = titles.map( (el,i) => {
-            const a : Article = includeText ? {title: el, url: urls[i], text: texts[i]} : {title: el, url: urls[i]};
+            const a : Article = includeText ? {title: el, url: urls[i], texts: texts[i]} : {title: el, url: urls[i], texts:[]};
             return a;
         })
     }

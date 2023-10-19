@@ -87,7 +87,7 @@ it can fit into the model context window. The LLM model used is dynamically  set
 
 `GET /summarize-articles?search=beagles&limit=2`
 
-     curl -i -H 'Accept: application/json' "http://localhost:3101/summarize-articles?search=beagles&limit=2"
+     curl -i -H 'Accept: application/json' "http://localhost:3101/summarize-articles?search=bananas&limit=20"
 
 ### Response
 

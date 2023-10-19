@@ -8,7 +8,7 @@ export const testAnswers = async () => {
     try{
         const responses = await Promise.all([
             
-            makePOSTRequest('answers', {question:'What is the capital of England?',source:'wiki'})
+            makePOSTRequest('answers', {question:'Tell me about RGBM',source:'wiki'})
             .then((res)=> (res.data.success)),
     
             makePOSTRequest('answers', {question:'wejrkwnsvkjf',source:'wiki'})

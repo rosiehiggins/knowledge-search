@@ -1,5 +1,6 @@
 import express, { Express, Request, Response, RequestHandler } from 'express';
 import { searchWikipedia } from './wikipediaService';
+import { answerQuestion } from './openAIService';
 import { Article } from './Article';
 import { Answer } from './Answer';
 import { Question } from './Question';
@@ -47,7 +48,7 @@ export async function handleAnswer(req : Request, res: Response)  {
         //Get keywords from question
 
         //Search Wikipedia for article(s)
-        const articles = await searchWikipedia(question.text,1,true);
+        const articles = await searchWikipedia(question.text,5,true);
         
         //response if no results
         if(articles.length===0){
@@ -58,7 +59,11 @@ export async function handleAnswer(req : Request, res: Response)  {
         }
 
         //Generate question answer
+        const answer = await answerQuestion(question.text,articles);
 
+        answerResponse.success = true;
+        answerResponse.message = 'Answer retrieved successfully'
+        answerResponse.answer = answer;
 
         res.status(200).send(answerResponse);
         return;
