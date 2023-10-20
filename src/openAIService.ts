@@ -73,6 +73,9 @@ function createRAGMessages(userMessage : string, systemMessage : string, delimit
         
     }
 
+    console.log('########prompt:########');
+    console.log(messages[1].content);
+
     return messages;
 }
 
@@ -151,10 +154,10 @@ export async function answerQuestion(question : string, articles : Article[]) : 
     console.log('answer question');
 
     const userMessage = 
-        `Your task is to answer the following question.\n`+
-        `Text from articles providing information related to the question is provided below. ` +
-        `Each article has a title and text. Articles is delimited by ####\n`+
-        `Read through all the article text and then provide an answer to the given question.\n`+
+        `Your task is to answer a query made by a user.\n`+
+        `Text from articles related to the query is provided below. ` +
+        `Each article has a title and text. Each article is delimited by ####\n`+
+        `Read through all the text and then provide an answer to the given question.\n`+
         `Your answer should be written as concisely as possible.\n\n`+
         `Question: ${question}\n\n`;
     

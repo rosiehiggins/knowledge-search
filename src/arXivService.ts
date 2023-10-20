@@ -1,40 +1,25 @@
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './Article';
-import cheerio from 'cheerio';
 
-//Application service for searching wikipedia 
+//Application service for searching arXiv  
+//Wikipedia is searched following their search protocol : https://www.mediawiki.org/wiki/API:Search
 
-interface WikiSearchResult {
-    ns: number,
-    title: string,
-    pageid: number,
-    size: number,
-    wordcount :number,
-    snippet: string,
-    timestamp: string
-}
 
-//Returns an array of Articles, 
-//A search query is sent to Wikipedia
-//Returned data is parsed into Article format {title:'',url:''}
+//Returns an array of Articles
+//A search query is sent to the arXiv public API
+//Returned data is parsed into Article format {title:'',authors: [], url:'', texts:[]}
 //if include text us flagged true then article text is added to each article
-//To retrieve article text the HTML for each article url is grabbed and parsed into a string.
-export async function searchWikipedia(search : string, limit: number, includeText: boolean) : Promise<Article[]> {
+export async function searchArXiv(query : string, limit: number, includeText: boolean) : Promise<Article[]> {
 
-    console.log('search wikipedia');
+    console.log('search arXiv');
 
     let articles : Article[] = [];
 
     try {
-        //Request data from wikipedia API
-        //const res = await axios.get(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${search}&limit=${limit}&format=json`);
-        const res  = await axios.get(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&srlimit=${limit}&format=json`);
-        //https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=banana&srlimit=10format=json
+        //Request data from arXiv API
+        const res  = await axios.get(`http://export.arxiv.org/api/query?search_query=${query}max_results=${limit}`);
 
-        console.log('data')
-        console.log(JSON.stringify(res.data));
-
-        const searchResults = res.data.query.search;
+        /*const searchResults = res.data.query.search;
         if(searchResults.length === 0){
             console.log('no results from search')
             return [];
@@ -76,7 +61,7 @@ export async function searchWikipedia(search : string, limit: number, includeTex
         articles = titles.map( (el,i) => {
             const a : Article = includeText ? {title: el, url: urls[i], texts: texts[i]} : {title: el, url: urls[i], texts:[]};
             return a;
-        })
+        })*/
     }
 
     catch(error){
@@ -87,7 +72,7 @@ export async function searchWikipedia(search : string, limit: number, includeTex
         else if (error instanceof Error) {
             message = error.message 
         }
-        throw new Error(`An error occurred searching Wikipedia: ${message}`);
+        throw new Error(`An error occurred searching arXiv: ${message}`);
     }
 
     return articles;

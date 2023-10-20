@@ -4,14 +4,14 @@ import { makePOSTRequest } from './util';
 
 export const testAnswers = async () => {
 
-
+    //'Explain RGBM'
     try{
         const responses = await Promise.all([
             
-            makePOSTRequest('answers', {question:'Tell me about RGBM',source:'wiki'})
+            makePOSTRequest('answer', {question:'What is the capital of England',source:'wiki'})
             .then((res)=> (res.data.success)),
     
-            makePOSTRequest('answers', {question:'wejrkwnsvkjf',source:'wiki'})
+            makePOSTRequest('answer', {question:'wejrkwnsvkjf',source:'wiki'})
             .then((res)=> {console.log(res.data); return res.status === 204}),
         ]) 
     

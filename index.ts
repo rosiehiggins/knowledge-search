@@ -24,14 +24,14 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to knowledge search');
 });
 
-app.post('/answers', handleAnswer);
+app.post('/answer', handleAnswer);
 
-app.get('/search-articles', async (req: Request, res: Response) => {
+app.get('/articles', async (req: Request, res: Response) => {
   console.log('search articles');
   await handleSearchArticles(req,res);
 })
 
-app.get('/summarize-articles', async (req: Request, res: Response) => {
+app.get('/summary', async (req: Request, res: Response) => {
   console.log('summarize articles');
   await handleSummarizeArticles(req,res);
 })

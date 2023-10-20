@@ -1,5 +1,7 @@
 # Knowledge search REST API application
 
+    An API that provides knowledge. This service uses publically accessible data sources such as Wikipedia and arXiv, and uses the latest in
+    RAG ( retrieval augmented generation ) to provide knowledge in a concise and accessible format, with links to sources used in generating answers.
 
 ## Set up
 
@@ -29,18 +31,18 @@
 
 The REST API to the application is described below.
 
-## answers
+## answer
 
 Given a question and a data source (wiki,...) e.g. "What is a deciduous tree?" or "What colour is the sky" this returns a answer in natural language and the sources used in the answer.
 
 ### Request
 
-POST /answers/
+POST /answer/
 
 curl -X POST http://localhost:3101/answers -H 'Accept: application/json' -d "{"question":"question","source":"wiki"}"
 
 
-## Search Wikipedia articles
+## articles
 
 Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles, this returns a list of
 articles matching your search query.
@@ -52,9 +54,9 @@ articles matching your search query.
     search: a string describing your search query. This parameter is required
     limit: the maximum number of articles to return, the limit is 50. This parameter is required
 
-`GET /search-articles?search=beagles&limit=3`
+`GET /articles?search=beagles&limit=3`
 
-    curl -i -H 'Accept: application/json' "http://localhost:3101/search-articles?search=beagles&limit=3"
+    curl -i -H 'Accept: application/json' "http://localhost:3101/articles?search=beagles&limit=3"
 
 ### Response
 
@@ -70,7 +72,7 @@ articles matching your search query.
     {"success":true,"message":"success","articles":[{"title":"Beagle","url":"https://en.wikipedia.org/wiki/Beagle"}]}
 
 
-## Get a summary of wikipedia articles
+## Summary
 
 Given a search query e.g. "New York" or "Sherlock Holmes" and a number of articles (limit), this returns a summary of 
 all the articles inlcuded in the query. Up to a limit of 3 articles. It implements a 2 stage RAG 
@@ -85,9 +87,9 @@ it can fit into the model context window. The LLM model used is dynamically  set
     search: a string describing your search query. This parameter is required
     limit: the maximum number of articles to inlcude in your summary, the limit is 3. This parameter is required
 
-`GET /summarize-articles?search=beagles&limit=2`
+`GET /summary?search=beagles&limit=2`
 
-     curl -i -H 'Accept: application/json' "http://localhost:3101/summarize-articles?search=bananas&limit=20"
+     curl -i -H 'Accept: application/json' "http://localhost:3101/summary?search=bananas&limit=20"
 
 ### Response
 
