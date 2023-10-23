@@ -1,5 +1,6 @@
 import express, { Express, Request, Response, RequestHandler } from 'express';
 import { searchWikipedia } from './wikipediaService';
+import { searchArXiv } from './arXivService';
 import { answerQuestion } from './openAIService';
 import { Article } from './Article';
 import { Answer } from './Answer';
@@ -12,7 +13,7 @@ interface AnswerResponse  {
     answer: Answer;
 }
 
-const sources = ['wiki']
+const sources = ['wiki','arxiv']
 
 export async function handleAnswer(req : Request, res: Response)  {
    
@@ -25,6 +26,7 @@ export async function handleAnswer(req : Request, res: Response)  {
 
     //If no question text is provided then return bad request
     if(!question.text) {
+        console.log('missing question');
         answerResponse.message = "Missing question text";
         res.status(400).send(answerResponse);
         return;
@@ -32,11 +34,13 @@ export async function handleAnswer(req : Request, res: Response)  {
 
     //If no source then set default source to wiki
     if(!question.source) {
+        console.log('missing source');
         question.source = "wiki";
     }
 
     //If source is not recognised return bad request
     else if(!sources.includes(question.source)){
+        console.log('invalid source');
         answerResponse.message = "Requested source does not exist, select an available source";
         res.status(400).send(answerResponse);
         return;
@@ -45,10 +49,20 @@ export async function handleAnswer(req : Request, res: Response)  {
     console.log('source',question.source);
 
     try {
+
+        let articles = [];
+
         //Get keywords from question
 
-        //Search Wikipedia for article(s)
-        const articles = await searchWikipedia(question.text,5,true);
+        if(question.source === 'arxiv'){
+            articles = await searchArXiv(question.text,5,true);
+        }
+
+        else {
+            //Search Wikipedia for article(s)
+            articles = await searchWikipedia(question.text,5,true);
+        }
+
         
         //response if no results
         if(articles.length===0){

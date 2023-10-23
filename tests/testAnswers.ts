@@ -8,11 +8,17 @@ export const testAnswers = async () => {
     try{
         const responses = await Promise.all([
             
-            makePOSTRequest('answer', {question:'What is the capital of England',source:'wiki'})
+            /*makePOSTRequest('answer', {question:'What is the capital of England',source:'wiki'})
+            .then((res)=> (res.data.success)),*/
+
+            makePOSTRequest('answer', {question:'What is Attention in LLMs?',source:'arxiv'})
             .then((res)=> (res.data.success)),
     
-            makePOSTRequest('answer', {question:'wejrkwnsvkjf',source:'wiki'})
-            .then((res)=> {console.log(res.data); return res.status === 204}),
+            /*makePOSTRequest('answer', {question:'wejrkwnsvkjf',source:'wiki'})
+            .then((res)=> {console.log(res.data); return res.status === 204}),*/
+
+            /*makePOSTRequest('answer', {question:'jhgjgghg',source:'arxiv'})
+            .then((res)=> (res.data.success)),*/
         ]) 
     
         console.log(responses)
