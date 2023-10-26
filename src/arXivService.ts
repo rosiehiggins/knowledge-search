@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 
+import { extractKeywordsAndPhrases } from './openAIService';
 import { Article } from './Article';
 import { PDFParser } from './pdfParser';
 
@@ -29,6 +30,8 @@ export async function searchArXiv(question : string, limit: number, includeText:
     try {
         //convert user question into arXiv query
         //TODO question to query conversion?
+        const keywords = await extractKeywordsAndPhrases(question);
+        console.log('keywords',keywords);
         const query = 'LLMs';
 
         //Request data from arXiv API

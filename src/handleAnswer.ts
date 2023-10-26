@@ -73,11 +73,11 @@ export async function handleAnswer(req : Request, res: Response)  {
         }
 
         //Generate question answer
-        const answer = await answerQuestion(question.text,articles);
+        //const answer = await answerQuestion(question.text,articles);
 
         answerResponse.success = true;
         answerResponse.message = 'Answer retrieved successfully'
-        answerResponse.answer = answer;
+        //answerResponse.answer = answer;
 
         res.status(200).send(answerResponse);
         return;

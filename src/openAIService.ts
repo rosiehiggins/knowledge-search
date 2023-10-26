@@ -202,3 +202,17 @@ export async function summarizeArticles(articles: Article[]) : Promise<Summary> 
     return summary;
 
 }
+
+export async function extractKeywordsAndPhrases(text : string) : Promise<string[]>{
+
+    const sysMessage = 'You will be provided with a short block of text, and your task is to extract a list of keywords and keyphrases from it.'+
+        ' Your keywords and keyphrases should be delimited by comma.';
+    
+    const msgs : ChatMessage[] = [{role:'system',content:sysMessage},{role:'user',content:text}]
+
+    const keywordsStr = await requestChatContent(msgs,GPT_35_TURBO,1000,0.3);
+
+    const keywords = keywordsStr.split(',');
+
+    return keywords;
+}

@@ -10,7 +10,7 @@ export class PDFParser{
         let pdf = await loadingTask.promise;
 
         const pageCount = pdf.numPages;
-        console.log(pdf.numPages);
+        //console.log(pdf.numPages);
 
         let promiseList = [];
 
